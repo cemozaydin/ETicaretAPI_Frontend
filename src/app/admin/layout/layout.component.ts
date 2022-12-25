@@ -11,7 +11,7 @@ export class LayoutComponent {
   constructor(private alertify:AlertifyService) {}
   
   ngOnInit():void{
-    this.alertify.message("Merhaba", MessageType.Error,Position.BottomRight);
+    //this.alertify.message("Merhaba", MessageType.Error,Position.BottomRight);
   }
 }
 

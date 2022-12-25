@@ -15,7 +15,7 @@ export class HttpClientService {
 
   get<T>(requestParameter:Partial<RequestParameters>, id?:number):Observable<T>{
     let url : string = "";
-    id=2;
+    //id=2;
     if (requestParameter.fullEndPoint) {
       url = requestParameter.fullEndPoint;
     }
@@ -31,7 +31,7 @@ export class HttpClientService {
       url = requestParameter.fullEndPoint;
     }
     else{
-      url = `${this.url(requestParameter)}/add`;
+      url = `${this.url(requestParameter)}`;
     }  
    return this.httpClient.post<T>(url,body,{headers:requestParameter.headers});   
   }
