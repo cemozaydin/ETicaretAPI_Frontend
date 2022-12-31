@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
 import { CreateProduct } from 'src/app/contracts/createProduct';
@@ -15,9 +15,10 @@ export class CreateComponent extends BaseComponent implements OnInit {
   constructor(spinner: NgxSpinnerService, private productService: ProductService, private alertify:AlertifyService){
     super(spinner);
   }
-  ngOnInit(): void {
-    
+  ngOnInit(): void { 
   }
+
+  @Output() createdProduct: EventEmitter<CreateProduct> = new EventEmitter();
 
   create(name:HTMLInputElement, stock:HTMLInputElement, price:HTMLInputElement){
     //this.showSpinner(SpinnerType.SquareJellyBox);
@@ -29,8 +30,15 @@ export class CreateComponent extends BaseComponent implements OnInit {
 
     this.productService.create(createProduct,()=>{
       this.hideSpinner(SpinnerType.SquareJellyBox);
-      this.alertify.message("Ürün ekleme başarılı",MessageType.Success,Position.TopRight);
+      this.alertify.message("Ürün ekleme başarılı",{
+        dismissOthers: true,
+        messageType: MessageType.Success,
+        position: Position.TopRight
+      });
+      this.createdProduct.emit(createProduct);
     });
+
+
   }
 
 }

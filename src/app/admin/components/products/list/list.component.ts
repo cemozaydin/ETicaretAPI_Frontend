@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,26 +14,40 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 })
 export class ListComponent extends BaseComponent implements OnInit {
   
-  constructor(spinner:NgxSpinnerService, private productService: ProductService, private alertifyService:AlertifyService){
+  constructor(spinner:NgxSpinnerService, 
+      private productService: ProductService, 
+      private alertifyService:AlertifyService)
+  {
     super(spinner);
   }
   
   displayedColumns: string[] = ['id','productName', 'stock', 'price', 'createdDate', 'updatedDate'];
-  dataSource = new MatTableDataSource<List_Product>();
+  dataSource:MatTableDataSource<List_Product> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   
  async ngOnInit() { 
-   this.getProducts();
+  await this.getProducts();
   }
   
   async getProducts(){
    this.showSpinner(SpinnerType.BallAtom);
    
-   let allProducts  = await this.productService.read(()=>this.hideSpinner(SpinnerType.BallAtom), errorMessage => this.alertifyService.message(errorMessage,MessageType.Error, Position.TopRight));
-   this.dataSource = new MatTableDataSource<List_Product>(allProducts);
-   this.dataSource.paginator = this.paginator;
-   console.log("dataSource içeriği : \n", this.dataSource.data);   
+   const allProducts: {totalCount:number, products:List_Product[]}  = await this.productService.read(
+            this.paginator? this.paginator.pageIndex:0,
+            this.paginator? this.paginator.pageSize:5,
+            ()=>this.hideSpinner(SpinnerType.BallAtom), 
+            errorMessage => this.alertifyService.message(errorMessage,{
+              dismissOthers : true,
+              messageType : MessageType.Error, 
+              position : Position.TopRight}));
+   
+   this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);  
+   this.paginator.length = allProducts.totalCount;
+   //console.log("dataSource içeriği : \n", this.dataSource.data);   
   }
 
+async pageChanged(){
+  await this.getProducts()
+}
 
 }
