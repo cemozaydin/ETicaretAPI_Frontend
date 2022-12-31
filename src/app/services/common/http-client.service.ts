@@ -63,6 +63,7 @@ export class HttpClientService {
 export class RequestParameters{
   controller?:string;
   action?:string;
+  
   headers?:HttpHeaders;
   baseUrl?:string;
   fullEndPoint?:string;
