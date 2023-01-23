@@ -14,7 +14,7 @@ export class BaseComponent {
     setTimeout(() => {
       /** spinner ends after 5 seconds */
       this.hideSpinner(spinnerNameType);
-    }, 500);
+    }, 1000);
 
   }
 

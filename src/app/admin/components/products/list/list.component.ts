@@ -14,6 +14,10 @@ import { ProductService } from 'src/app/services/common/models/product.service';
 })
 export class ListComponent extends BaseComponent implements OnInit {
   
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'updatedDate','edit','delete'];
+  dataSource: MatTableDataSource<List_Product>=null;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
   constructor(spinner:NgxSpinnerService, 
       private productService: ProductService, 
       private alertifyService:AlertifyService)
@@ -21,33 +25,49 @@ export class ListComponent extends BaseComponent implements OnInit {
     super(spinner);
   }
   
-  displayedColumns: string[] = ['id','productName', 'stock', 'price', 'createdDate', 'updatedDate'];
-  dataSource:MatTableDataSource<List_Product> = null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  
  async ngOnInit() { 
   await this.getProducts();
-  }
+  } 
   
-  async getProducts(){
-   this.showSpinner(SpinnerType.BallAtom);
-   
-   const allProducts: {totalCount:number, products:List_Product[]}  = await this.productService.read(
-            this.paginator? this.paginator.pageIndex:0,
-            this.paginator? this.paginator.pageSize:5,
-            ()=>this.hideSpinner(SpinnerType.BallAtom), 
-            errorMessage => this.alertifyService.message(errorMessage,{
-              dismissOthers : true,
-              messageType : MessageType.Error, 
-              position : Position.TopRight}));
-   
-   this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);  
-   this.paginator.length = allProducts.totalCount;
-   //console.log("dataSource içeriği : \n", this.dataSource.data);   
+  // async getProducts() {
+  //   this.showSpinner(SpinnerType.BallAtom);
+  //   const allProducts: { totalCount: number; products: List_Product[] } = await this.productService.read(
+  //           this.paginator ? this.paginator.pageIndex : 0, 
+  //           this.paginator ? this.paginator.pageSize : 10, 
+  //           () => this.hideSpinner(SpinnerType.BallAtom), 
+  //           errorMessage => this.alertifyService.message(errorMessage, {
+  //               dismissOthers: true,
+  //               messageType: MessageType.Error,
+  //               position: Position.TopRight
+  //           }));
+
+  //   this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
+  //   this.paginator.length = allProducts.totalCount;
+  // }
+
+
+  async getProducts() {
+    this.showSpinner(SpinnerType.BallAtom);
+    const allProducts: {totalCount:number,products:List_Product[]} = await this.productService.read(
+            this.paginator ? this.paginator.pageIndex : 0, 
+            this.paginator ? this.paginator.pageSize : 5, 
+            () => this.hideSpinner(SpinnerType.BallAtom), 
+            errorMessage => this.alertifyService.message(errorMessage, {
+                dismissOthers: true,
+                messageType: MessageType.Error,
+                position: Position.TopRight
+            }));
+
+    this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
+    this.paginator.length = allProducts.totalCount;
   }
 
-async pageChanged(){
-  await this.getProducts()
-}
+  async pageChanged(){
+    await this.getProducts()
+  }
+
+  async delete(id){
+    alert(id);
+  }
 
 }
