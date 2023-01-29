@@ -7,6 +7,8 @@ import { List_Product } from 'src/app/contracts/list_Product';
 import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
 import { ProductService } from 'src/app/services/common/models/product.service';
 
+declare var $ : any;
+
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -66,8 +68,10 @@ export class ListComponent extends BaseComponent implements OnInit {
     await this.getProducts()
   }
 
-  async delete(id){
-    alert(id);
-  }
+  // async delete(id, event){
+  //   //alert(id);
+  //   const img: HTMLImageElement = event.srcElement;
+  //   $(img.parentElement.parentElement).fadeOut(1500);
+  // }
 
 }

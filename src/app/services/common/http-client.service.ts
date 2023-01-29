@@ -45,7 +45,7 @@ export class HttpClientService {
     return this.httpClient.put<T>(url, body, { headers: requestParameter.headers, responseType: requestParameter.responseType as 'json' });
   }
 
-  delete<T>(requestParameter: Partial<RequestParameters>, id: string): Observable<T> {
+  delete<T>(requestParameter: Partial<RequestParameters>, id: number): Observable<T> {
     let url: string = "";
     if (requestParameter.fullEndPoint)
       url = requestParameter.fullEndPoint;
